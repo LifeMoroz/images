@@ -1,0 +1,86 @@
+FORMAT: 1A
+HOST: http://polls.apiblueprint.org/
+
+# images
+
+Pypo-images is a simple service. API allowing consumers to upload images and crop it.
+
+## ping [/ping]
+
+### Ping [GET]
+Is service alive
+
++ Response 200 (text/plain)
+
+        ok
+
+## upload [/upload]
+
+### Upload image hosted on the Internet [POST]
+
+Service support downloading image from the Internet
+You could provide specify each crop or just allow service to auto crop it.
+
++ Request (application/json)
+
+        {
+            "href": "https://mail.ru/image_on_the_Internet.jpg",
+            "alt": "Text"
+        }
+        
++ Request (multipart/form-data; boundary=---BOUNDARY)
+
+        -----BOUNDARY
+        Content-Disposition: form-data; name="image"; filename="image.jpg"
+        Content-Type: image/jpeg
+        Content-Transfer-Encoding: base64
+
+        /9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+        HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+        MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIA
+        AhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEB
+        AAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AL+AD//Z
+        -----BOUNDARY
+        Content-Disposition: form-data; name="alt"
+        
+        Text
+        -----BOUNDARY--
+        
++ Response 200 (application/json)
+
+        {
+            "status": "ok",
+            "code": 0,
+            "id": 12345
+        }
+
+
+## Get image [/get]
+
+### Get image by id [GET]
+
+You should use id to get image from service.
+It is possible to crop and resize image.
+First is crop, then resize
+
++ Request (application/json)
+        
+        {
+            "status": "ok",
+            "code": 0,
+            "id": 12345,
+            "crop": {
+                "width": 600,
+                "height": 400,
+                "x": 10,
+                "y": 10
+            },
+            "resize": {
+                "width": 610,
+                "height" 407,
+            }
+        }
+
++ Response 200 (image/*)
+        
+        image
